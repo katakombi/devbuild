@@ -1,0 +1,50 @@
+info SETTING UP QTERMWIDGET BUILD ENVIRONMENT
+
+apt_update
+
+setup_timezone
+
+apt_upgrade
+
+runroot apt install -y --no-install-recommends \
+	build-essential \
+	git \
+	ca-certificates \
+	wget \
+	cmake \
+	pkg-config \
+	python3-dev \
+	libglib2.0-dev \
+	qt5-default \
+	qttools5-dev \
+	python3-pip \
+	sip-dev python3-sip-dev \
+        python3-pyqt5 pyqt5-dev pyqt5-dev-tools \
+	dbus
+
+runuser git clone https://github.com/lxqt/lxqt-build-tools.git /tmp/lxqt-build-tools
+runuser sh -c 'cd /tmp/lxqt-build-tools && mkdir -p build && cd build && cmake .. && make'
+runroot sh -c 'cd /tmp/lxqt-build-tools/build && make install'
+
+runuser git clone https://github.com/lxqt/qtermwidget /qtermwidget
+runuser sh -c 'cd /tmp/qtermwidget && mkdir -p build && cd build && cmake .. -DQTERMWIDGET_BUILD_PYTHON_BINDING=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=/lib && make'
+runroot sh -c 'cd /tmp/qtermwidget/build && make install'
+
+runroot sh -c 'pip3 install Nuitka==0.6.9.4'
+
+info BUILD STANDALONE TEST
+
+cat << EOF | import_pipe /tmp/test.py
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from QTermWidget import QTermWidget
+
+app = QApplication(sys.argv)
+win = QTermWidget()
+win.setWindowTitle('QTermWidget Test')
+win.resize(450, 250)
+win.show()
+sys.exit(app.exec_())
+EOF
+
+runuser nuitka3 --standalone --plugin-enable=qt-plugins --output-dir=$HOME/qtermwidget-test /tmp/test.py 
