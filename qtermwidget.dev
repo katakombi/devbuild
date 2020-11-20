@@ -26,15 +26,15 @@ runuser git clone https://github.com/lxqt/lxqt-build-tools.git /tmp/lxqt-build-t
 runuser sh -c 'cd /tmp/lxqt-build-tools && mkdir -p build && cd build && cmake .. && make'
 runroot sh -c 'cd /tmp/lxqt-build-tools/build && make install'
 
-runuser git clone https://github.com/lxqt/qtermwidget /tmp/qtermwidget
-runuser sh -c 'cd /tmp/qtermwidget && mkdir -p build && cd build && cmake .. -DQTERMWIDGET_BUILD_PYTHON_BINDING=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=/lib && make'
-runroot sh -c 'cd /tmp/qtermwidget/build && make install'
+runuser git clone https://github.com/lxqt/qtermwidget /qtermwidget
+runuser sh -c 'cd /qtermwidget && mkdir -p build && cd build && cmake .. -DQTERMWIDGET_BUILD_PYTHON_BINDING=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=/lib && make'
+runroot sh -c 'cd /qtermwidget/build && make install'
 
 runroot sh -c 'pip3 install Nuitka==0.6.9.4'
 
 info BUILD STANDALONE TEST
 
-cat << EOF | import_pipe /tmp/test.py
+cat << EOF | import_pipe /qtermwidget/test.py
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget
 from QTermWidget import QTermWidget
@@ -47,4 +47,4 @@ win.show()
 sys.exit(app.exec_())
 EOF
 
-runuser nuitka3 --standalone --plugin-enable=qt-plugins --output-dir=$HOME/qtermwidget-test /tmp/test.py 
+runuser nuitka3 --standalone --plugin-enable=qt-plugins --output-dir=$HOME/qtermwidget-test /qtermwidget/test.py 
