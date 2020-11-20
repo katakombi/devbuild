@@ -26,7 +26,7 @@ runuser git clone https://github.com/lxqt/lxqt-build-tools.git /tmp/lxqt-build-t
 runuser sh -c 'cd /tmp/lxqt-build-tools && mkdir -p build && cd build && cmake .. && make'
 runroot sh -c 'cd /tmp/lxqt-build-tools/build && make install'
 
-runuser git clone https://github.com/lxqt/qtermwidget /qtermwidget
+runuser git clone https://github.com/lxqt/qtermwidget /tmp/qtermwidget
 runuser sh -c 'cd /tmp/qtermwidget && mkdir -p build && cd build && cmake .. -DQTERMWIDGET_BUILD_PYTHON_BINDING=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=/lib && make'
 runroot sh -c 'cd /tmp/qtermwidget/build && make install'
 
