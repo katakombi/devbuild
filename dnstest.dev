@@ -1,0 +1,33 @@
+info SETTING UP DNSTEST ENVIRONMENT
+
+apt_update
+
+setup_timezone
+
+apt_upgrade
+
+runroot apt install -y --no-install-recommends \
+	build-essential \
+	git \
+	ca-certificates \
+	wget \
+	curl \
+        iputils-arping iputils-ping bind9-host bind9-dnsutils 
+
+info RUN DNS TEST WITH MODIFIED /etc/resolv.conf
+
+echo "nameserver 208.67.222.222" > /tmp/resolv.conf
+
+echo "RES_OPTIONS="edns0 trust-ad" $PROOT -0 -r ./.tmp/ -b /tmp/resolv.conf:/etc/resolv.conf host www.spiegel.de"
+RES_OPTIONS="edns0 trust-ad" $PROOT -0 -r ./.tmp/ -b /tmp/resolv.conf:/etc/resolv.conf host www.spiegel.de
+
+echo "RES_OPTIONS="edns0 trust-ad" $PROOT -0 -r ./.tmp/ -b /tmp/resolv.conf:/etc/resolv.conf dig www.stern.de"
+RES_OPTIONS="edns0 trust-ad" $PROOT -0 -r ./.tmp/ -b /tmp/resolv.conf:/etc/resolv.conf dig www.stern.de
+
+echo "RES_OPTIONS="edns0 trust-ad" $PROOT -0 -r ./.tmp/ -b /tmp/resolv.conf:/etc/resolv.conf nslookup www.bild.de"
+RES_OPTIONS="edns0 trust-ad" $PROOT -0 -r ./.tmp/ -b /tmp/resolv.conf:/etc/resolv.conf nslookup www.bild.de
+
+echo "RES_OPTIONS="edns0 trust-ad" $PROOT -0 -r ./.tmp/ -b /tmp/resolv.conf:/etc/resolv.conf ping -c 7 www.google.com"
+RES_OPTIONS="edns0 trust-ad" $PROOT -0 -r ./.tmp/ -b /tmp/resolv.conf:/etc/resolv.conf ping -c 7 www.google.com
+
+rm -f /tmp/resolv.conf
