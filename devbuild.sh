@@ -3,7 +3,8 @@
 SCRIPTDIR="$(dirname `readlink -f $0`)"
 
 BASEIMG="$SCRIPTDIR"/ubuntu-base-20.04-base-amd64.tar.gz
-PROOT="$SCRIPTDIR/proot-5.2 -w / "
+PROOTREL="proot-5.2 -w / "
+PROOT="$SCRIPTDIR/$PROOTREL"
 BUILDDIR="$SCRIPTDIR/.tmp"
 DEVSCRIPT="$1"
 
@@ -33,10 +34,27 @@ runuser() {
 
 import_pipe() {
 	local data
-	rm -r "$BUILDDIR/$1"
+	rm -rf "$BUILDDIR/$1"
 	while read -r data; do
 		printf "%s\n" "$data" >> "$BUILDDIR/$1"
 	done
+}
+
+run_pipe() {
+	local data
+	rm -rf "$SCRIPTDIR/run.sh"
+	while read -r data; do
+		printf "%s\n" "$data" >> "$SCRIPTDIR/run.sh"
+	done
+}
+
+box() {
+	info CREATING PORTABLE BINARY, THIS MAY TAKE A WHILE...
+	local BOXNAME="${DEVSCRIPT%.dev}"
+	cd "$SCRIPTDIR" && chmod a+rx run.sh proot-5.2
+	cd "$SCRIPTDIR" && tar -cjpf devbuild.tbz proot-5.2 run.sh .tmp && rm -f run.sh
+	"$SCRIPTDIR/addpayload.sh" --binary devbuild.tbz && mv install.sh "$BOXNAME.sh" && chmod a+rx "$BOXNAME.sh" && rm -f devbuild.tbz
+	info DONE
 }
 
 setup_timezone() {

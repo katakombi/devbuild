@@ -1,0 +1,14 @@
+#!/bin/bash
+
+OLDDIR="$(pwd)"
+DIR="$(mktemp -d)"
+PARAMS="$@"
+echo "Using $DIR..."
+
+echo -n "Installing..."
+tar -xjpf devbuild.tbz --directory $DIR
+echo "Running..."
+cd $DIR && ./run.sh "$PARAMS"
+echo -n "Cleaning up..."
+cd $OLDDIR && rm -rf $DIR
+echo "Done" && exit 0
