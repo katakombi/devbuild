@@ -1,0 +1,20 @@
+info SETTING UP X11VNC ENVIRONMENT
+
+apt_update
+
+setup_timezone
+
+apt_upgrade
+
+runroot apt install -y --no-install-recommends \
+	ca-certificates \
+	x11vnc
+
+cat << EOF | run_pipe
+#!/bin/bash
+echo "Running x11vnc..."
+./$PROOTREL -r .tmp x11vnc
+echo "Finished!"
+EOF
+
+box
