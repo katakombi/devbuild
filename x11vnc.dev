@@ -12,8 +12,8 @@ runroot apt install -y --no-install-recommends \
 
 cat << EOF | run_pipe
 #!/bin/bash
-echo "Running x11vnc..."
-./$PROOTREL -r .tmp x11vnc
+echo "Running x11vnc $PARAMS"
+PARAMS="$@" ./$PROOTREL -r .tmp sh -c 'x11vnc $PARAMS'
 echo "Finished!"
 EOF
 
