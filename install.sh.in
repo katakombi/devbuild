@@ -3,10 +3,13 @@
 OLDDIR="$(pwd)"
 DIR="$(mktemp -d)"
 PARAMS="$@"
+echo "Running $0 $PARAMS"
 echo "Using $DIR..."
 
-echo -n "Installing..."
-tar -xjpf devbuild.tbz --directory $DIR
+echo -n "Extracting payload..."
+match=$(grep --text --line-number '^PAYLOAD:$' $0 | cut -d ':' -f 1)
+payload_start=$((match + 1))
+tail -n +$payload_start $0 | tar -xjpf - --directory $DIR
 echo "Running..."
 cd $DIR && ./run.sh "$PARAMS"
 echo -n "Cleaning up..."
