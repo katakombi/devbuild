@@ -12,7 +12,7 @@ runroot apt install -y --no-install-recommends \
 
 cat << EOF | run_pipe
 #!/bin/bash
-export PARAMS="\$\@"
+export PARAMS="\$@"
 echo "Running x11vnc $PARAMS"
 ./$PROOTREL -r .tmp sh -c 'x11vnc \$PARAMS'
 echo "Finished!"
