@@ -15,4 +15,4 @@ Run via
 
 ## Donations and Bounties
 
-ADA: addr1walletaddress012345
+**ADA:** addr1walletaddress012345
