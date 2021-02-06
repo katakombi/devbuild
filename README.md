@@ -12,3 +12,7 @@ Run via
 * tar + gzip
 * tail 
 * libtalloc
+
+## Donations and Bounties
+
+ADA: addr1walletaddress012345
