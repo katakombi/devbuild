@@ -13,6 +13,3 @@ Run via
 * tail 
 * libtalloc
 
-## Donations and Bounties
-
-**ADA:** addr1walletaddress012345
